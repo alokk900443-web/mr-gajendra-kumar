@@ -1,436 +1,94 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#16a34a">
-
-  <title>MR Gajendra Kumar – Online Grocery</title>
-  <meta name="description"
-        content="फल, सब्जी, राशन, दूध और रोजमर्रा का सामान घर बैठे मंगाएं।">
-
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="icon-192.png">
-
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:Arial,sans-serif;
-      background:#f4f7f5;
-      color:#222;
-      padding-bottom:80px;
+ <"name": "MR Gajendra Kumar – Online Grocery",
+  "short_name": "MR Gajendra",
+  "description": "फल, सब्जी, राशन, दूध और रोजमर्रा का सामान घर बैठे मंगाएं।",
+  "lang": "hi",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f7f5",
+  "theme_color": "#16a34a",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
+  ]
+}
+const CACHE_NAME = "mr-gajendra-grocery-v1";
 
-    header{
-      background:#16a34a;
-      color:white;
-      padding:18px 20px 22px;
-      position:sticky;
-      top:0;
-      z-index:20;
-    }
-
-    .top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-
-    .brand img{
-      width:70px;
-      height:70px;
-      border-radius:50%;
-      background:white;
-      object-fit:cover;
-      border:3px solid white;
-    }
-
-    .brand h1{
-      font-size:22px;
-      line-height:1.15;
-    }
-
-    .brand p{
-      margin-top:5px;
-      font-size:14px;
-    }
-
-    .cart{
-      background:white;
-      color:#15803d;
-      border:0;
-      border-radius:18px;
-      padding:14px 18px;
-      font-size:20px;
-      font-weight:bold;
-    }
-
-    .search{
-      margin-top:18px;
-      width:100%;
-      padding:17px 20px;
-      border:0;
-      border-radius:18px;
-      font-size:18px;
-      outline:none;
-    }
-
-    .hero{
-      margin:28px 18px 20px;
-      background:#dcfce7;
-      padding:25px;
-      border-radius:25px;
-    }
-
-    .hero h2{
-      color:#15803d;
-      font-size:28px;
-      margin-bottom:12px;
-    }
-
-    .hero p{
-      font-size:18px;
-      line-height:1.5;
-    }
-
-    .categories{
-      display:flex;
-      gap:12px;
-      overflow-x:auto;
-      padding:5px 18px 20px;
-    }
-
-    .category{
-      min-width:105px;
-      background:white;
-      border:0;
-      border-radius:18px;
-      padding:15px 8px;
-      font-size:16px;
-      box-shadow:0 3px 12px #00000012;
-    }
-
-    .category .emoji{
-      display:block;
-      font-size:38px;
-      margin-bottom:6px;
-    }
-
-    .notice{
-      margin:0 18px 20px;
-      background:#fff7ed;
-      padding:18px;
-      border-radius:18px;
-      font-size:16px;
-      line-height:1.5;
-    }
-
-    .section-title{
-      margin:22px 20px 14px;
-      font-size:26px;
-    }
-
-    .products{
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:14px;
-      padding:0 14px;
-    }
-
-    .product{
-      background:white;
-      border-radius:20px;
-      padding:10px;
-      box-shadow:0 3px 15px #00000012;
-      overflow:hidden;
-    }
-
-    .product img{
-      width:100%;
-      height:145px;
-      object-fit:cover;
-      border-radius:15px;
-      background:#eee;
-    }
-
-    .product h3{
-      font-size:19px;
-      margin:10px 5px 5px;
-    }
-
-    .shop{
-      color:#777;
-      font-size:13px;
-      margin:0 5px 7px;
-    }
-
-    .unit{
-      color:#777;
-      margin:0 5px 7px;
-    }
-
-    .price{
-      color:#15803d;
-      font-size:22px;
-      font-weight:bold;
-      margin:5px;
-    }
-
-    .add{
-      width:100%;
-      border:0;
-      background:#16a34a;
-      color:white;
-      padding:12px 5px;
-      border-radius:14px;
-      font-size:15px;
-      font-weight:bold;
-    }
-
-    .bottom{
-      position:fixed;
-      bottom:0;
-      left:0;
-      right:0;
-      height:72px;
-      background:white;
-      display:flex;
-      justify-content:space-around;
-      align-items:center;
-      box-shadow:0 -3px 15px #0002;
-      z-index:30;
-    }
-
-    .bottom button{
-      background:none;
-      border:0;
-      font-size:14px;
-    }
-
-    .bottom span{
-      display:block;
-      font-size:28px;
-    }
-
-    @media(max-width:380px){
-      .products{grid-template-columns:1fr}
-      .brand h1{font-size:19px}
-    }
-  </style>
-</head>
-
-<body>
-
-<header>
-  <div class="top">
-    <div class="brand">
-      <!-- अपनी फोटो/लोगो का नाम icon-192.png रखें -->
-      <img src="icon-192.png" alt="MR Gajendra Kumar">
-      <div>
-        <h1>MR – GAJENDRA KUMAR</h1>
-        <p>आपका अपना Online Grocery Store</p>
-      </div>
-    </div>
-
-    <button class="cart">🛒 <span id="cartCount">0</span></button>
-  </div>
-
-  <input
-    class="search"
-    id="search"
-    type="search"
-    placeholder="🔍 सामान खोजें..."
-    oninput="searchProducts()"
-  >
-</header>
-
-<section class="hero">
-  <h2>🛒 घर बैठे सामान मंगाएं</h2>
-  <p>फल, सब्जी, राशन, दूध और रोजमर्रा का सामान एक ही जगह।</p>
-</section>
-
-<div class="categories">
-  <button class="category" onclick="filterProducts('all')">
-    <span class="emoji">🛒</span>सब
-  </button>
-
-  <button class="category" onclick="filterProducts('फल')">
-    <span class="emoji">🍎</span>फल
-  </button>
-
-  <button class="category" onclick="filterProducts('सब्जी')">
-    <span class="emoji">🥬</span>सब्जी
-  </button>
-
-  <button class="category" onclick="filterProducts('राशन')">
-    <span class="emoji">🍚</span>राशन
-  </button>
-
-  <button class="category" onclick="filterProducts('दूध')">
-    <span class="emoji">🥛</span>दूध
-  </button>
-
-  <button class="category" onclick="filterProducts('अन्य')">
-    <span class="emoji">🧴</span>अन्य
-  </button>
-</div>
-
-<div class="notice">
-  🏪 <b>दुकानदार सिस्टम:</b>
-  अभी सभी सामान आपके स्टोर के माध्यम से दिखाए जा रहे हैं।
-  बाद में अलग-अलग दुकानदारों के WhatsApp नंबर जोड़े जा सकते हैं।
-</div>
-
-<h2 class="section-title">🛍️ उपलब्ध सामान</h2>
-
-<div class="products" id="products"></div>
-
-<div class="bottom">
-  <button onclick="filterProducts('all')">
-    <span>🏠</span>Home
-  </button>
-
-  <button onclick="filterProducts('फल')">
-    <span>🍎</span>फल
-  </button>
-
-  <button onclick="filterProducts('सब्जी')">
-    <span>🥬</span>सब्जी
-  </button>
-
-  <button onclick="filterProducts('राशन')">
-    <span>🍚</span>राशन
-  </button>
-
-  <button onclick="showCart()">
-    <span>🛒</span>Cart
-  </button>
-</div>
-
-<script>
-const products = [
-
-  /* फल */
-  {name:"सेब",cat:"फल",unit:"1 किलो",price:120,img:"https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=600"},
-  {name:"केला",cat:"फल",unit:"1 दर्जन",price:60,img:"https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=600"},
-  {name:"संतरा",cat:"फल",unit:"1 किलो",price:80,img:"https://images.unsplash.com/photo-1547514701-42782101795e?w=600"},
-  {name:"अंगूर",cat:"फल",unit:"1 किलो",price:100,img:"https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=600"},
-  {name:"पपीता",cat:"फल",unit:"1 किलो",price:50,img:"https://images.unsplash.com/photo-1526318472351-c75fcf070305?w=600"},
-  {name:"अनार",cat:"फल",unit:"1 किलो",price:140,img:"https://images.unsplash.com/photo-1541344999736-83eca272f6fc?w=600"},
-
-  /* सब्जी */
-  {name:"आलू",cat:"सब्जी",unit:"1 किलो",price:30,img:"https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=600"},
-  {name:"प्याज",cat:"सब्जी",unit:"1 किलो",price:35,img:"https://images.unsplash.com/photo-1508747703725-719777637510?w=600"},
-  {name:"टमाटर",cat:"सब्जी",unit:"1 किलो",price:40,img:"https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=600"},
-  {name:"भिंडी",cat:"सब्जी",unit:"1 किलो",price:50,img:"https://images.unsplash.com/photo-1567364816519-cbc9c4c1f2b7?w=600"},
-  {name:"फूलगोभी",cat:"सब्जी",unit:"1 किलो",price:50,img:"https://images.unsplash.com/photo-1568584711271-7b4c3b4c8b4b?w=600"},
-  {name:"बैंगन",cat:"सब्जी",unit:"1 किलो",price:40,img:"https://images.unsplash.com/photo-1618414466256-4b62f39b5b4a?w=600"},
-
-  /* राशन */
-  {name:"चावल",cat:"राशन",unit:"5 किलो",price:300,img:"https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600"},
-  {name:"आटा",cat:"राशन",unit:"5 किलो",price:250,img:"https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600"},
-  {name:"दाल",cat:"राशन",unit:"1 किलो",price:120,img:"https://images.unsplash.com/photo-1515543904379-3d757afe72e8?w=600"},
-  {name:"चना दाल",cat:"राशन",unit:"1 किलो",price:100,img:"https://images.unsplash.com/photo-1585998571721-1e9c7e9d0a2c?w=600"},
-  {name:"चीनी",cat:"राशन",unit:"1 किलो",price:50,img:"https://images.unsplash.com/photo-1581441363689-1f3c3c414635?w=600"},
-  {name:"नमक",cat:"राशन",unit:"1 किलो",price:25,img:"https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=600"},
-
-  /* दूध */
-  {name:"दूध",cat:"दूध",unit:"1 लीटर",price:60,img:"https://images.unsplash.com/photo-1550583724-b2692b85b150?w=600"},
-  {name:"दही",cat:"दूध",unit:"500 ग्राम",price:40,img:"https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600"},
-  {name:"पनीर",cat:"दूध",unit:"250 ग्राम",price:90,img:"https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=600"},
-
-  /* अन्य */
-  {name:"चाय",cat:"अन्य",unit:"250 ग्राम",price:90,img:"https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?w=600"},
-  {name:"बिस्कुट",cat:"अन्य",unit:"1 पैकेट",price:20,img:"https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600"},
-  {name:"साबुन",cat:"अन्य",unit:"1 पीस",price:35,img:"https://images.unsplash.com/photo-1607006344380-b6775a0824c7?w=600"},
-  {name:"डिटर्जेंट",cat:"अन्य",unit:"1 किलो",price:90,img:"https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=600"}
+const FILES_TO_CACHE = [
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "./icon-192.png",
+  "./icon-512.png"
 ];
 
-let currentCategory = "all";
-let cartCount = 0;
-
-function render(list){
-  const box = document.getElementById("products");
-
-  if(!list.length){
-    box.innerHTML =
-      "<p style='grid-column:1/-1;text-align:center;padding:40px'>😔 सामान नहीं मिला</p>";
-    return;
-  }
-
-  box.innerHTML = list.map((p,i)=>`
-    <div class="product">
-      <img src="${p.img}" alt="${p.name}" loading="lazy">
-      <h3>${p.name}</h3>
-      <div class="shop">🏪 ${p.cat} दुकान</div>
-      <div class="unit">${p.unit}</div>
-      <div class="price">₹${p.price}</div>
-      <button class="add" onclick="addCart(${i})">
-        🛒 Cart में डालें
-      </button>
-    </div>
-  `).join("");
-}
-
-function filterProducts(category){
-  currentCategory = category;
-
-  if(category === "all"){
-    render(products);
-  }else{
-    render(products.filter(p => p.cat === category));
-  }
-
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-function searchProducts(){
-  const q = document.getElementById("search").value.trim().toLowerCase();
-
-  let list = products;
-
-  if(currentCategory !== "all"){
-    list = list.filter(p => p.cat === currentCategory);
-  }
-
-  if(q){
-    list = list.filter(p => p.name.toLowerCase().includes(q));
-  }
-
-  render(list);
-}
-
-function addCart(){
-  cartCount++;
-  document.getElementById("cartCount").textContent = cartCount;
-}
-
-function showCart(){
-  alert(
-    cartCount
-      ? "🛒 आपके Cart में " + cartCount + " सामान है।"
-      : "🛒 Cart अभी खाली है।"
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(FILES_TO_CACHE);
+    })
   );
-}
 
-if("serviceWorker" in navigator){
-  window.addEventListener("load",()=>{
-    navigator.serviceWorker.register("sw.js");
-  });
-}
+  self.skipWaiting();
+});
 
-render(products);
-</script>
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames
+          .filter((name) => name !== CACHE_NAME)
+          .map((name) => caches.delete(name))
+      );
+    }).then(() => self.clients.claim())
+  );
+});
 
-</body>
-</html>
-{
+self.addEventListener("fetch", (event) => {
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) {
+        return cachedResponse;
+      }
 
-"
+      return fetch(event.request).then((networkResponse) => {
+        if (
+          !networkResponse ||
+          networkResponse.status !== 200 ||
+          networkResponse.type !== "basic"
+        ) {
+          return networkResponse;
+        }
+
+        const responseClone = networkResponse.clone();
+
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseClone);
+        });
+
+        return networkResponse;
+      });
+    }).catch(() => {
+      return caches.match("./index.html");
+    })
+  );
+});
+mr-gajendra-kumar/
+├── index.html
+├── manifest.json
+├── sw.js
+├── icon-192.png
+└── icon-512.png
+<link rel="manifest" href="manifest.json">
