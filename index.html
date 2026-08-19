@@ -1,94 +1,1221 @@
- <"name": "MR Gajendra Kumar – Online Grocery",
-  "short_name": "MR Gajendra",
-  "description": "फल, सब्जी, राशन, दूध और रोजमर्रा का सामान घर बैठे मंगाएं।",
-  "lang": "hi",
-  "dir": "ltr",
-  "start_url": "./",
-  "scope": "./",
-  "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#f4f7f5",
-  "theme_color": "#16a34a",
-  "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ]
-}
-const CACHE_NAME = "mr-gajendra-grocery-v1";
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-const FILES_TO_CACHE = [
-  "./",
-  "./index.html",
-  "./manifest.json",
-  "./icon-192.png",
-  "./icon-512.png"
+<title>MR Gajendra Kumar - Wholesale Grocery</title>
+
+<meta name="theme-color" content="#16a34a">
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  background:#f5f7f5;
+  color:#222;
+  padding-bottom:80px;
+}
+
+header{
+  background:#16a34a;
+  color:white;
+  padding:15px;
+  position:sticky;
+  top:0;
+  z-index:50;
+}
+
+.top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.profile{
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid white;
+  background:white;
+}
+
+.brand h1{
+  font-size:18px;
+}
+
+.brand p{
+  font-size:12px;
+  margin-top:4px;
+}
+
+.cart{
+  border:0;
+  background:white;
+  color:#15803d;
+  padding:11px;
+  border-radius:12px;
+  font-size:20px;
+}
+
+.search{
+  width:100%;
+  margin-top:14px;
+  padding:14px;
+  border:0;
+  border-radius:12px;
+  font-size:16px;
+  outline:none;
+}
+
+.banner{
+  margin:15px;
+  padding:22px;
+  background:#dcfce7;
+  border-radius:18px;
+}
+
+.banner h2{
+  color:#15803d;
+  margin-bottom:8px;
+}
+
+.banner p{
+  line-height:1.5;
+}
+
+.categories{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding:5px 15px 15px;
+}
+
+.category{
+  min-width:90px;
+  background:white;
+  border:0;
+  padding:12px 8px;
+  border-radius:14px;
+  box-shadow:0 2px 8px #00000012;
+  font-size:14px;
+}
+
+.category span{
+  display:block;
+  font-size:28px;
+  margin-bottom:5px;
+}
+
+.products{
+  padding:0 15px 30px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.product{
+  background:white;
+  padding:10px;
+  border-radius:15px;
+  box-shadow:0 2px 9px #00000012;
+}
+
+.product img{
+  width:100%;
+  height:120px;
+  object-fit:cover;
+  border-radius:10px;
+  background:#eee;
+}
+
+.product h3{
+  font-size:16px;
+  margin-top:8px;
+}
+
+.shop{
+  color:#777;
+  font-size:12px;
+  margin-top:4px;
+}
+
+.weight{
+  color:#777;
+  font-size:12px;
+  margin:5px 0;
+}
+
+.price{
+  color:#15803d;
+  font-size:19px;
+  font-weight:bold;
+}
+
+.add{
+  width:100%;
+  margin-top:8px;
+  padding:10px;
+  border:0;
+  border-radius:9px;
+  background:#16a34a;
+  color:white;
+  font-weight:bold;
+}
+
+.bottom{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:70px;
+  background:white;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  box-shadow:0 -2px 10px #0002;
+  z-index:100;
+}
+
+.bottom button{
+  border:0;
+  background:none;
+  font-size:12px;
+}
+
+.bottom span{
+  display:block;
+  font-size:23px;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#0008;
+  z-index:200;
+  align-items:flex-end;
+}
+
+.modal-box{
+  background:white;
+  width:100%;
+  max-height:90vh;
+  overflow:auto;
+  padding:20px;
+  border-radius:20px 20px 0 0;
+}
+
+.modal-box h2{
+  margin-bottom:15px;
+}
+
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #ddd;
+  padding:12px 0;
+}
+
+.qty button{
+  border:0;
+  padding:7px 10px;
+  margin:2px;
+  border-radius:7px;
+}
+
+.total{
+  font-size:21px;
+  font-weight:bold;
+  margin:15px 0;
+}
+
+input,textarea{
+  width:100%;
+  padding:13px;
+  margin:6px 0;
+  border:1px solid #ddd;
+  border-radius:9px;
+}
+
+.order{
+  width:100%;
+  padding:14px;
+  border:0;
+  border-radius:10px;
+  background:#16a34a;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  margin-top:8px;
+}
+
+.close{
+  background:#ddd;
+  color:#222;
+}
+
+.empty{
+  text-align:center;
+  padding:30px;
+  color:#777;
+}
+
+@media(max-width:360px){
+  .products{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="top">
+
+<div class="brand">
+
+<img
+src="photo.jpg"
+class="profile"
+alt="MR Gajendra Kumar"
+>
+
+<div>
+<h1>MR – GAJENDRA KUMAR</h1>
+<p>Wholesale Grocery Store</p>
+</div>
+
+</div>
+
+<button class="cart" onclick="openCart()">
+🛒 <span id="cartCount">0</span>
+</button>
+
+</div>
+
+<input
+id="search"
+class="search"
+placeholder="🔍 सामान खोजें..."
+oninput="searchProducts()"
+>
+
+</header>
+
+
+<section class="banner">
+
+<h2>🛒 थोक एवं किराना सामान</h2>
+
+<p>
+फल, फूल, सब्जी, दाल, चावल, आटा, लहसुन,
+प्याज, तेल और रोजमर्रा का पूरा किराना सामान।
+</p>
+
+</section>
+
+
+<div class="categories">
+
+<button class="category" onclick="filterCategory('सब')">
+<span>🛒</span>सब
+</button>
+
+<button class="category" onclick="filterCategory('फल')">
+<span>🍎</span>फल
+</button>
+
+<button class="category" onclick="filterCategory('फूल')">
+<span>🌸</span>फूल
+</button>
+
+<button class="category" onclick="filterCategory('सब्जी')">
+<span>🥬</span>सब्जी
+</button>
+
+<button class="category" onclick="filterCategory('राशन')">
+<span>🍚</span>राशन
+</button>
+
+<button class="category" onclick="filterCategory('तेल')">
+<span>🛢️</span>तेल
+</button>
+
+<button class="category" onclick="filterCategory('अन्य')">
+<span>🧴</span>अन्य
+</button>
+
+</div>
+
+
+<div class="products" id="products"></div>
+
+
+<!-- CART -->
+
+<div class="modal" id="cartModal">
+
+<div class="modal-box">
+
+<h2>🛒 आपका Order</h2>
+
+<div id="cartItems"></div>
+
+<div class="total">
+कुल: ₹<span id="total">0</span>
+</div>
+
+<h3>📦 ग्राहक की जानकारी</h3>
+
+<input
+id="customerName"
+placeholder="आपका नाम"
+>
+
+<input
+id="customerPhone"
+placeholder="मोबाइल नंबर"
+type="tel"
+>
+
+<textarea
+id="address"
+placeholder="पूरा पता"
+></textarea>
+
+<button class="order" onclick="placeOrder()">
+📱 WhatsApp पर Order भेजें
+</button>
+
+<button class="order close" onclick="closeCart()">
+बंद करें
+</button>
+
+</div>
+
+</div>
+
+
+<div class="bottom">
+
+<button onclick="filterCategory('सब')">
+<span>🏠</span>
+Home
+</button>
+
+<button onclick="filterCategory('फल')">
+<span>🍎</span>
+फल
+</button>
+
+<button onclick="filterCategory('सब्जी')">
+<span>🥬</span>
+सब्जी
+</button>
+
+<button onclick="filterCategory('राशन')">
+<span>🍚</span>
+राशन
+</button>
+
+<button onclick="openCart()">
+<span>🛒</span>
+Cart
+</button>
+
+</div>
+
+
+<script>
+
+/* =================================================
+   WHATSAPP NUMBER
+   ================================================= */
+
+const ownerNumber = "918102956584";
+
+
+/* =================================================
+   PRODUCTS
+   ================================================= */
+
+const products = [
+
+/* ---------- फल ---------- */
+
+{
+id:1,
+name:"सेब",
+category:"फल",
+weight:"1 किलो",
+price:120,
+image:"https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=500"
+},
+
+{
+id:2,
+name:"केला",
+category:"फल",
+weight:"1 दर्जन",
+price:60,
+image:"https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=500"
+},
+
+{
+id:3,
+name:"संतरा",
+category:"फल",
+weight:"1 किलो",
+price:80,
+image:"https://images.unsplash.com/photo-1547514701-42782101795e?w=500"
+},
+
+{
+id:4,
+name:"अंगूर",
+category:"फल",
+weight:"1 किलो",
+price:100,
+image:"https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=500"
+},
+
+{
+id:5,
+name:"पपीता",
+category:"फल",
+weight:"1 किलो",
+price:50,
+image:"https://images.unsplash.com/photo-1526318472351-c75fcf070305?w=500"
+},
+
+{
+id:6,
+name:"अनार",
+category:"फल",
+weight:"1 किलो",
+price:140,
+image:"https://images.unsplash.com/photo-1541344999736-83eca272f6fc?w=500"
+},
+
+
+/* ---------- फूल ---------- */
+
+{
+id:7,
+name:"गेंदा फूल",
+category:"फूल",
+weight:"1 किलो",
+price:80,
+image:"https://images.unsplash.com/photo-1606041008023-472dfb5e530f?w=500"
+},
+
+{
+id:8,
+name:"गुलाब",
+category:"फूल",
+weight:"1 बंडल",
+price:100,
+image:"https://images.unsplash.com/photo-1496062031456-07b8f162a322?w=500"
+},
+
+{
+id:9,
+name:"माला",
+category:"फूल",
+weight:"1 माला",
+price:30,
+image:"https://images.unsplash.com/photo-1606800052052-a08af7148866?w=500"
+},
+
+
+/* ---------- सब्जी ---------- */
+
+{
+id:10,
+name:"आलू",
+category:"सब्जी",
+weight:"1 किलो",
+price:30,
+image:"https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=500"
+},
+
+{
+id:11,
+name:"प्याज",
+category:"सब्जी",
+weight:"1 किलो",
+price:35,
+image:"https://images.unsplash.com/photo-1508747703725-719777637510?w=500"
+},
+
+{
+id:12,
+name:"टमाटर",
+category:"सब्जी",
+weight:"1 किलो",
+price:40,
+image:"https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=500"
+},
+
+{
+id:13,
+name:"लहसुन",
+category:"सब्जी",
+weight:"1 किलो",
+price:180,
+image:"https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?w=500"
+},
+
+{
+id:14,
+name:"अदरक",
+category:"सब्जी",
+weight:"1 किलो",
+price:140,
+image:"https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=500"
+},
+
+{
+id:15,
+name:"हरी मिर्च",
+category:"सब्जी",
+weight:"1 किलो",
+price:70,
+image:"https://images.unsplash.com/photo-1588252303782-cb80119abd6d?w=500"
+},
+
+{
+id:16,
+name:"भिंडी",
+category:"सब्जी",
+weight:"1 किलो",
+price:50,
+image:"https://images.unsplash.com/photo-1567364816519-cbc9c4c1f2b7?w=500"
+},
+
+{
+id:17,
+name:"बैंगन",
+category:"सब्जी",
+weight:"1 किलो",
+price:40,
+image:"https://images.unsplash.com/photo-1618414466256-4b62f39b5b4a?w=500"
+},
+
+{
+id:18,
+name:"फूलगोभी",
+category:"सब्जी",
+weight:"1 किलो",
+price:50,
+image:"https://images.unsplash.com/photo-1568584711271-7b4c3b4c8b4b?w=500"
+},
+
+{
+id:19,
+name:"गोभी",
+category:"सब्जी",
+weight:"1 पीस",
+price:40,
+image:"https://images.unsplash.com/photo-1568584711271-7b4c3b4c8b4b?w=500"
+},
+
+{
+id:20,
+name:"गाजर",
+category:"सब्जी",
+weight:"1 किलो",
+price:60,
+image:"https://images.unsplash.com/photo-1445282768818-728615cc910a?w=500"
+},
+
+
+/* ---------- राशन ---------- */
+
+{
+id:21,
+name:"चावल",
+category:"राशन",
+weight:"5 किलो",
+price:300,
+image:"https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500"
+},
+
+{
+id:22,
+name:"आटा",
+category:"राशन",
+weight:"5 किलो",
+price:250,
+image:"https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500"
+},
+
+{
+id:23,
+name:"गेहूं",
+category:"राशन",
+weight:"5 किलो",
+price:250,
+image:"https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=500"
+},
+
+{
+id:24,
+name:"अरहर दाल",
+category:"राशन",
+weight:"1 किलो",
+price:150,
+image:"https://images.unsplash.com/photo-1515543904379-3d757afe72e4?w=500"
+},
+
+{
+id:25,
+name:"मसूर दाल",
+category:"राशन",
+weight:"1 किलो",
+price:110,
+image:"https://images.unsplash.com/photo-1585998571721-1e9c7e9d0a2c?w=500"
+},
+
+{
+id:26,
+name:"चना दाल",
+category:"राशन",
+weight:"1 किलो",
+price:100,
+image:"https://images.unsplash.com/photo-1585998571721-1e9c7e9d0a2c?w=500"
+},
+
+{
+id:27,
+name:"मूंग दाल",
+category:"राशन",
+weight:"1 किलो",
+price:120,
+image:"https://images.unsplash.com/photo-1585998571721-1e9c7e9d0a2c?w=500"
+},
+
+{
+id:28,
+name:"चीनी",
+category:"राशन",
+weight:"1 किलो",
+price:50,
+image:"https://images.unsplash.com/photo-1581441363689-1f3c3c414635?w=500"
+},
+
+{
+id:29,
+name:"नमक",
+category:"राशन",
+weight:"1 किलो",
+price:25,
+image:"https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500"
+},
+
+{
+id:30,
+name:"चना",
+category:"राशन",
+weight:"1 किलो",
+price:80,
+image:"https://images.unsplash.com/photo-1515543904379-3d757afe72e4?w=500"
+},
+
+{
+id:31,
+name:"मटर",
+category:"राशन",
+weight:"1 किलो",
+price:100,
+image:"https://images.unsplash.com/photo-1589934691296-0b7f5a1e2a4a?w=500"
+},
+
+
+/* ---------- तेल ---------- */
+
+{
+id:32,
+name:"सरसों तेल",
+category:"तेल",
+weight:"1 लीटर",
+price:150,
+image:"https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500"
+},
+
+{
+id:33,
+name:"रिफाइंड तेल",
+category:"तेल",
+weight:"1 लीटर",
+price:130,
+image:"https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500"
+},
+
+{
+id:34,
+name:"सोयाबीन तेल",
+category:"तेल",
+weight:"1 लीटर",
+price:130,
+image:"https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500"
+},
+
+
+/* ---------- अन्य किराना ---------- */
+
+{
+id:35,
+name:"चाय पत्ती",
+category:"अन्य",
+weight:"250 ग्राम",
+price:90,
+image:"https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?w=500"
+},
+
+{
+id:36,
+name:"कॉफी",
+category:"अन्य",
+weight:"100 ग्राम",
+price:100,
+image:"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500"
+},
+
+{
+id:37,
+name:"हल्दी",
+category:"अन्य",
+weight:"100 ग्राम",
+price:30,
+image:"https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=500"
+},
+
+{
+id:38,
+name:"मिर्च पाउडर",
+category:"अन्य",
+weight:"100 ग्राम",
+price:35,
+image:"https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500"
+},
+
+{
+id:39,
+name:"धनिया पाउडर",
+category:"अन्य",
+weight:"100 ग्राम",
+price:30,
+image:"https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500"
+},
+
+{
+id:40,
+name:"जीरा",
+category:"अन्य",
+weight:"100 ग्राम",
+price:40,
+image:"https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500"
+},
+
+{
+id:41,
+name:"बिस्कुट",
+category:"अन्य",
+weight:"1 पैकेट",
+price:20,
+image:"https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500"
+},
+
+{
+id:42,
+name:"साबुन",
+category:"अन्य",
+weight:"1 पीस",
+price:35,
+image:"https://images.unsplash.com/photo-1607006344380-b6775a0824c7?w=500"
+},
+
+{
+id:43,
+name:"डिटर्जेंट",
+category:"अन्य",
+weight:"1 किलो",
+price:90,
+image:"https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=500"
+},
+
+{
+id:44,
+name:"टूथपेस्ट",
+category:"अन्य",
+weight:"1 पैकेट",
+price:60,
+image:"https://images.unsplash.com/photo-1559591937-e8f4b5f5a2d5?w=500"
+},
+
+{
+id:45,
+name:"माचिस",
+category:"अन्य",
+weight:"1 पैकेट",
+price:10,
+image:"https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500"
+},
+
+{
+id:46,
+name:"अगरबत्ती",
+category:"अन्य",
+weight:"1 पैकेट",
+price:30,
+image:"https://images.unsplash.com/photo-1603006905003-be475563bc59?w=500"
+}
+
 ];
 
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(FILES_TO_CACHE);
-    })
-  );
 
-  self.skipWaiting();
+let cart=[];
+
+
+/* PRODUCTS */
+
+function showProducts(list=products){
+
+const box=document.getElementById("products");
+
+if(list.length===0){
+
+box.innerHTML=
+'<div class="empty">😔 सामान नहीं मिला</div>';
+
+return;
+
+}
+
+box.innerHTML="";
+
+list.forEach(p=>{
+
+box.innerHTML+=`
+
+<div class="product">
+
+<img
+src="${p.image}"
+alt="${p.name}"
+loading="lazy"
+>
+
+<h3>${p.name}</h3>
+
+<div class="shop">
+🏪 ${p.category}
+</div>
+
+<div class="weight">
+${p.weight}
+</div>
+
+<div class="price">
+₹${p.price}
+</div>
+
+<button
+class="add"
+onclick="addToCart(${p.id})"
+>
+🛒 Cart में डालें
+</button>
+
+</div>
+
+`;
+
 });
 
-self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames
-          .filter((name) => name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
-      );
-    }).then(() => self.clients.claim())
-  );
+}
+
+
+/* CART */
+
+function addToCart(id){
+
+const product=products.find(p=>p.id===id);
+
+const old=cart.find(p=>p.id===id);
+
+if(old){
+
+old.qty++;
+
+}else{
+
+cart.push({
+...product,
+qty:1
 });
 
-self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
+}
 
-      return fetch(event.request).then((networkResponse) => {
-        if (
-          !networkResponse ||
-          networkResponse.status !== 200 ||
-          networkResponse.type !== "basic"
-        ) {
-          return networkResponse;
-        }
+updateCart();
 
-        const responseClone = networkResponse.clone();
+alert(product.name+" Cart में जोड़ दिया गया ✅");
 
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseClone);
-        });
+}
 
-        return networkResponse;
-      });
-    }).catch(() => {
-      return caches.match("./index.html");
-    })
-  );
+
+function updateCart(){
+
+document.getElementById("cartCount").innerText=
+cart.reduce((sum,p)=>sum+p.qty,0);
+
+}
+
+
+function openCart(){
+
+document.getElementById("cartModal").style.display="flex";
+
+showCart();
+
+}
+
+
+function closeCart(){
+
+document.getElementById("cartModal").style.display="none";
+
+}
+
+
+function showCart(){
+
+const box=document.getElementById("cartItems");
+
+box.innerHTML="";
+
+if(cart.length===0){
+
+box.innerHTML=
+'<div class="empty">🛒 Cart खाली है</div>';
+
+document.getElementById("total").innerText=0;
+
+return;
+
+}
+
+let total=0;
+
+cart.forEach((p,index)=>{
+
+const itemTotal=p.price*p.qty;
+
+total+=itemTotal;
+
+box.innerHTML+=`
+
+<div class="cart-item">
+
+<div>
+
+<b>${p.name}</b><br>
+
+₹${p.price} × ${p.qty}
+
+</div>
+
+<div class="qty">
+
+<button onclick="decrease(${index})">
+➖
+</button>
+
+<button onclick="increase(${index})">
+➕
+</button>
+
+</div>
+
+</div>
+
+`;
+
 });
-mr-gajendra-kumar/
-├── index.html
-├── manifest.json
-├── sw.js
-├── icon-192.png
-└── icon-512.png
-<link rel="manifest" href="manifest.json">
+
+document.getElementById("total").innerText=total;
+
+}
+
+
+function increase(index){
+
+cart[index].qty++;
+
+updateCart();
+
+showCart();
+
+}
+
+
+function decrease(index){
+
+cart[index].qty--;
+
+if(cart[index].qty<=0){
+
+cart.splice(index,1);
+
+}
+
+updateCart();
+
+showCart();
+
+}
+
+
+/* SEARCH */
+
+function searchProducts(){
+
+const text=
+document.getElementById("search").value.toLowerCase();
+
+const result=products.filter(p=>
+p.name.toLowerCase().includes(text)
+);
+
+showProducts(result);
+
+}
+
+
+/* CATEGORY */
+
+function filterCategory(category){
+
+if(category==="सब"){
+
+showProducts(products);
+
+return;
+
+}
+
+showProducts(
+products.filter(p=>p.category===category)
+);
+
+}
+
+
+/* WHATSAPP ORDER */
+
+function placeOrder(){
+
+if(cart.length===0){
+
+alert("पहले सामान Cart में डालें 🛒");
+
+return;
+
+}
+
+const name=
+document.getElementById("customerName").value.trim();
+
+const phone=
+document.getElementById("customerPhone").value.trim();
+
+const address=
+document.getElementById("address").value.trim();
+
+
+if(!name || !phone || !address){
+
+alert("कृपया नाम, मोबाइल और पूरा पता भरें।");
+
+return;
+
+}
+
+
+let total=0;
+
+let message=
+"🛒 MR – GAJENDRA KUMAR ORDER\n\n";
+
+message+=
+"👤 नाम: "+name+"\n";
+
+message+=
+"📱 मोबाइल: "+phone+"\n";
+
+message+=
+"📍 पता: "+address+"\n\n";
+
+message+="📦 सामान:\n";
+
+
+cart.forEach(p=>{
+
+const amount=p.price*p.qty;
+
+total+=amount;
+
+message+=
+"• "+p.name+
+" × "+p.qty+
+" = ₹"+amount+
+"\n";
+
+});
+
+
+message+=
+"\n💰 कुल: ₹"+total;
+
+message+=
+"\n\n🏪 MR – GAJENDRA KUMAR";
+
+
+const url=
+"https://wa.me/"+
+ownerNumber+
+"?text="+
+encodeURIComponent(message);
+
+
+window.open(url,"_blank");
+
+}
+
+
+/* START */
+
+showProducts();
+
+</script>
+
+</body>
+ </html>
